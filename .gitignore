@@ -1,0 +1,5 @@
+node_modules
+tmp
+
+# OS X
+.DS_Store
