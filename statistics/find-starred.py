@@ -29,13 +29,13 @@ def main():
     api = nap.url.Url('https://api.github.com/')
 
     repos = api.get('search/repositories', params={
-        'q': 'language:javascript',
+        'q': 'stars:>1',
         'sort': 'stars',
         'order': 'desc'
     }).json()['items']
 
     works = []
-    for repo in repos[:20]:
+    for repo in repos[:50]:
         if not os.path.exists(repo['name']):
             run_command('git clone %s' % repo['clone_url'])
 
@@ -44,7 +44,7 @@ def main():
         _, stdout, stderr = run_command('githours', cwd=repo['name'])
 
         total_work = json.loads(stdout)['total']
-        total_work['repository'] = repo['full_name']
+        total_work.update(repo)
         works.append(total_work)
 
     f = open('stats.json', 'w')
